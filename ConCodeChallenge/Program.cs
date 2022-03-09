@@ -749,6 +749,301 @@ namespace ConCodeChallenge
 
         #region "EASY"
 
+
+        public static string CorrectPath(string str)
+        {
+            //rdrdr??rddd?dr
+
+            IList<string> lst = new List<string> {""};
+
+            foreach (char c in str)
+            {
+                if ("udrl".IndexOf(c) >= 0)
+                {
+                    //String without ?
+                    lst = lst.Select(s => s + c.ToString()).ToList();
+                }
+                else
+                {
+                    //All combinations with udrl (??? ==> (udrl): 4*4*4)
+                    lst = lst.SelectMany(s => "udrl".Select(d => s + d.ToString())).ToList(); 
+                }
+            }
+
+            return lst.Where(s => PathCombination(s)).First();
+        }
+        private static bool PathCombination(string str)
+        {
+            //Every str from lst is tested here
+
+            int y= 0;
+            int x = 0;
+            bool[] array = new bool[25];                    //Bool with 25 places for storing combination checked Y/N
+
+            foreach (char c in str)
+            {
+                if (c == 'd')
+                {
+                    y += 1;
+                }
+                if (c == 'u')
+                {
+                    y += -1;
+                }
+                if (c == 'r')
+                {
+                    x += 1;
+                }
+                if (c == 'l')
+                {
+                    x += -1;
+                }
+
+                if (x < 0 || y < 0 || x > 4 || y > 4)
+                {
+                    return false;
+                }
+
+                if (array[x * 5 + y] == true)           //Already checked this combination
+                    return false;                       //Go to next str in lst for testing
+
+                array[x * 5 + y] = true;
+            } 
+
+            return (x == 4 && y == 4) ? true : false;
+        }
+
+        ///// <summary>
+        ///// Not working!!!
+        ///// </summary>
+        ///// <param name="str"></param>
+        ///// <returns></returns>
+        //public static string CorrectPath(string str)
+        //{
+        //    char[] ch = str.ToString().ToCharArray();
+        //    char[] res = str.ToString().ToCharArray();
+
+        //    char[] dir = new char[4] { 'r', 'l', 'u', 'd' };
+        //    int intQ = str.Where(a => (a == '?')).Count();
+
+        //    List<string> lst = new List<string>();
+
+        //    //for(int i = 0; i < intQ; i++)
+        //    //{
+        //    //    return GetResult(ch, res, dir, i);
+        //    //}
+
+        //    foreach (char c1 in dir)
+        //    {
+        //        for (int i = 0; i < ch.Length; i++)
+        //        {
+        //            if (ch[i] == '?')
+        //            {
+        //                res[i] = c1;
+
+        //                lst.Add(new string(res));
+
+        //                foreach (char c2 in dir)
+        //                {
+        //                    for (int j = i + 1; j < ch.Length; j++)
+        //                    {
+        //                        if (ch[j] == '?')
+        //                        {
+        //                            res[j] = c2;
+
+
+        //                            lst.Add(new string(res));
+
+        //                            foreach (char c3 in dir)
+        //                            {
+        //                                for (int k = j + 1; k < ch.Length; k++)
+        //                                {
+        //                                    if (ch[k] == '?')
+        //                                    {
+        //                                        res[k] = c3;
+
+        //                                        lst.Add(new string(res));
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+
+
+        //    lst.RemoveAll(u => u.Contains('?'));
+        //    List<string> noDupes = lst.Distinct().ToList();
+
+        //    foreach(string result in noDupes)
+        //    if (PathCombination(result))
+        //        return result;
+
+
+        //    return string.Empty;
+        //}
+        public static string CorrectPath1(string str)
+        {
+            string[] letters = new string[] { "r", "l", "u", "d" };
+
+            if (str.Contains("?"))
+            {
+                var regex = new Regex(Regex.Escape("?"));
+                foreach (var letter in letters)
+                {
+                    string current = CorrectPathAnsw(regex.Replace(str, letter, 1));     //Recursive function
+                    if (current != null)
+                    {
+                        return current;
+                    }
+                }
+            }
+
+            int x = 0;
+            int y = 0;
+            bool[,] grid = new bool[5, 5];
+            foreach (char direction in str)
+            {
+                switch (direction)
+                {
+                    case 'r':
+                        x++;
+                        break;
+                    case 'l':
+                        x--;
+                        break;
+                    case 'u':
+                        y--;
+                        break;
+                    case 'd':
+                        y++;
+                        break;
+                }
+
+                if (x < 0 || y < 0 || x > 4 || y > 4 || grid[x, y])
+                {
+                    return null;
+                }
+                else
+                {
+                    grid[x, y] = true;
+                }
+            }
+
+            if (x == 4 && y == 4)
+            {
+                return str;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        public static string CorrectPathAnsw(string str)
+        {
+            IList<string> possibilities = new List<string>();
+
+            possibilities.Add("");
+            
+            foreach (char c in str)
+            {
+                if ("udrl".IndexOf(c) >= 0)
+                {
+                    possibilities = possibilities.Select(s => s + c.ToString()).ToList();
+                }
+                else
+                {
+                    possibilities = possibilities.SelectMany(s => "udrl".Select(d => s + d.ToString())).ToList();
+                }
+            }
+
+            return possibilities.Where(s => EvalSolution(s)).First();
+        }
+        static bool EvalSolution(string str)
+        {
+            int row = 0;
+            int col = 0;
+            
+            bool[] array = new bool[25];
+            array[0] = true;
+
+            foreach (char c in str)
+            {
+                switch (c)
+                {
+                    case 'u':
+                        row--;
+                        break;
+                    case 'd':
+                        row++;
+                        break;
+                    case 'l':
+                        col--;
+                        break;
+                    case 'r':
+                        col++;
+                        break;
+                    default:
+                        return false;
+                }
+
+                if (row < 0 || row > 4 || col < 0 || col > 4)
+                    return false;
+
+                if (array[row * 5 + col] == true)
+                    return false;
+                
+                array[row * 5 + col] = true;
+            }
+
+            return (row == 4 && col == 4);
+        }
+
+
+        public static bool SerialNumber(string str)
+        {
+            string[] arr= str.Split(".");
+
+            if (arr.Length != 3)
+                return false;
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (arr[i].Length != 3)
+                    return false;
+
+
+            //int[] intArr = Array.ConvertAll(arr[i].ToArray(), a => int.Parse(a.ToString()));
+            int[] intArr = arr[i].Select(c => Int32.Parse(c.ToString())).ToArray();
+
+            if (! (intArr[2] > intArr[1] || intArr[2] > intArr[0]))
+                    return false;
+
+                if (i == 0)
+                {
+                    var num1 = Array.ConvertAll(arr[0].ToArray(), a => int.Parse(a.ToString())).Sum();
+                    if (num1 % 2 != 0)
+                    {
+                        return false;
+                    }
+                }
+
+                if (i == 3)
+                {
+                    var num2 = Array.ConvertAll(arr[1].ToArray(), a => int.Parse(a.ToString())).Sum();
+                    if (num2 % 2 == 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         public static int ClosestEnemy(int[] arr)
         {
             int result = arr.Length;
@@ -2725,6 +3020,16 @@ namespace ConCodeChallenge
         {
             CultureInfo.CurrentCulture = new CultureInfo("en-EN", false);
             CultureInfo.CurrentUICulture = new CultureInfo("en-EN", false);
+
+
+            string str = "rd?u??dld?ddrr";
+            Console.WriteLine(CorrectPath(str));
+            Console.WriteLine(CorrectPathAnsw(str));
+
+
+            //string str = "114.568.112";    
+            //Console.WriteLine(SerialNumber(str));
+
 
             //string str = "75025";    
             //Console.WriteLine(FibonacciChecker(long.Parse(str)));
