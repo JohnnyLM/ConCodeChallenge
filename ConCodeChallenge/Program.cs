@@ -288,6 +288,29 @@ namespace ConCodeChallenge
 
         #region "MEDIUM"
 
+        public static int CountingMinutes(string str)
+        {
+            DateTime dt1;
+            DateTime dt2;
+            string[] s = str.Split("-");
+
+            string startTime = DateTime.Now.ToShortDateString() + " " + s[0];
+            string endTime = DateTime.Now.ToShortDateString() + " " + s[1];
+
+            if (DateTime.TryParse(startTime, out dt1) && DateTime.TryParse(endTime, out dt2))
+            {
+                if (dt1 > dt2)
+                {
+                    endTime = DateTime.Parse(endTime).AddHours(24).ToString();
+                }
+
+                TimeSpan duration = DateTime.Parse(endTime).Subtract(DateTime.Parse(startTime));
+
+                return (int)(duration.TotalMinutes);
+            }
+
+            return 0;
+        }
 
         public static string FibonacciChecker(long x)
         {
@@ -750,6 +773,118 @@ namespace ConCodeChallenge
         #region "EASY"
 
 
+        public static string TimeDifference(string[] strArr)
+        {
+            DateTime[] dt = new DateTime[strArr.Length];
+
+            for (int i = 0; i < strArr.Length; i++)
+            {
+                dt[i] = DateTime.Parse(strArr[i]);
+            }
+
+            Array.Sort(dt);
+            Array.Reverse(dt);
+
+            double minuteDiff = 24 * 60 - (dt[0] - dt[dt.Length - 1]).TotalMinutes;
+
+            for (int i = 0; i < dt.Length - 1; i++)
+            {
+                if (minuteDiff > (dt[i] - dt[i + 1]).TotalMinutes)
+                {
+                    minuteDiff = (dt[i] - dt[i + 1]).TotalMinutes;
+                }
+            }
+
+            return minuteDiff.ToString();
+        }
+        public static int TimeDifferenceAnsw(string[] strArr)
+        { 
+            DateTime[] dateTimes = new DateTime[strArr.Length];
+            for (int i = 0; i<strArr.Length; i++)
+            {
+              dateTimes[i] = DateTime.Parse(strArr[i]);
+            }
+
+            Array.Sort(dateTimes);
+            Array.Reverse(dateTimes);
+
+            double totalMinutes = 24 * 60 - (dateTimes[0] - dateTimes[dateTimes.Length - 1]).TotalMinutes;
+            for (int i = 0; i<dateTimes.Length - 1; i++)
+            {
+              if ((dateTimes[i] - dateTimes[i + 1]).TotalMinutes < totalMinutes) 
+                { 
+                    totalMinutes = (dateTimes[i] - dateTimes[i + 1]).TotalMinutes; 
+                }
+            }
+
+            return (int)totalMinutes;
+          }
+
+        public static string StringMerge(string str)
+        {
+            str = str.Replace(" ", "");
+            var result = string.Empty;
+
+            string[] arr = str.Split("*");
+
+            for (int i = 0; i < arr[0].Length; i++)
+            {
+                result += arr[0][i].ToString() + arr[1][i].ToString();
+            }
+
+            return result;
+        }
+
+        public static bool HappyNumbers(int nr)
+        {
+            //int[] intArr = nr.ToString().Select(o => Convert.ToInt32(o) - 48).ToArray();
+
+            char[] ch = nr.ToString().ToCharArray();
+            int[] intArr = Array.ConvertAll(ch, s => int.Parse(s.ToString()));
+            int result = 0;
+
+            foreach (int i in intArr)
+            {
+                result += (int)Math.Pow(Convert.ToDouble(i), 2);
+            }
+
+            if (result == 1)
+                return true;
+            else if (result.ToString().Length == 1)
+                return false;
+            else
+                return HappyNumbers(result);
+        }
+
+        public static string ASCIIConversion(string str)
+        {
+            char[] ch = str.ToCharArray();
+            var result = string.Empty;
+
+            foreach(char c in ch)
+            {
+                if (c == ' ')
+                {
+                    result += " ";
+                }
+                else
+                {
+                    int val = c;
+                    result += val.ToString();
+                }
+            }
+
+            //int i = 65;
+            //char c = Convert.ToChar(i);
+
+            return result;
+        }
+
+        public static bool DistinctCharacters(string str)
+        {
+            return (str.Distinct().Count() >= 10);
+        }
+
         public static string CorrectPath(string str)
         {
             //rdrdr??rddd?dr
@@ -812,7 +947,6 @@ namespace ConCodeChallenge
 
             return (x == 4 && y == 4) ? true : false;
         }
-
         ///// <summary>
         ///// Not working!!!
         ///// </summary>
@@ -3022,14 +3156,39 @@ namespace ConCodeChallenge
             CultureInfo.CurrentUICulture = new CultureInfo("en-EN", false);
 
 
-            string str = "rd?u??dld?ddrr";
-            Console.WriteLine(CorrectPath(str));
-            Console.WriteLine(CorrectPathAnsw(str));
+            //string[] arr = new string[] { "1:10pm", "4:40am", "5:00pm" };
+            //string[] arr = new string[] { "2:10pm", "1:30pm", "10:30am", "4:42pm" };
+            string str = "1:23am-1:08am";
+            //string str = "12:30pm-12:00am";
+            Console.WriteLine(CountingMinutes((str)));
 
+
+
+
+            //string[] arr = new string[] { "1:10pm", "4:40am", "5:00pm" };
+            //string[] arr = new string[] { "2:10pm", "1:30pm", "10:30am", "4:42pm" };
+            //string[] arr = new string[] { "10:00am", "11:45pm", "5:00am", "12:01am" };
+            //Console.WriteLine(TimeDifference((arr)));
+            //Console.WriteLine(TimeDifferenceAnsw((arr)));
+
+            //string str = "123hg* aaabb";
+            //Console.WriteLine(StringMerge((str)));
+
+            //var i = 101;
+            //Console.WriteLine(HappyNumbers(i));
+
+            //string str = "abc **";
+            //Console.WriteLine(ASCIIConversion(str));
+
+            //string str = "12345789mansjvenf";
+            //Console.WriteLine(DistinctCharacters(str));
+
+            //string str = "rd?u??dld?ddrr";
+            //Console.WriteLine(CorrectPath(str));
+            //Console.WriteLine(CorrectPathAnsw(str));
 
             //string str = "114.568.112";    
             //Console.WriteLine(SerialNumber(str));
-
 
             //string str = "75025";    
             //Console.WriteLine(FibonacciChecker(long.Parse(str)));
