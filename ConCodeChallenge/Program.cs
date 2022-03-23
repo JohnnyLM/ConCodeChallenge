@@ -315,7 +315,7 @@ namespace ConCodeChallenge
         public static string FibonacciChecker(long x)
         {
             if (IsPerfectSquare(5 * x * x + 4) || IsPerfectSquare(5 * x * x - 4))
-                return "yes";    
+                return "yes";
             return "no";
         }
         private static bool IsPerfectSquare(long x)
@@ -360,13 +360,13 @@ namespace ConCodeChallenge
             int count = 0;
             char[] arr = str.ToString().ToCharArray();
 
-            foreach(char c in arr)
+            foreach (char c in arr)
             {
                 if (char.IsDigit(c))
                 {
                     sum += int.Parse(c.ToString());
                 }
-                else if(Char.IsLetter(c))
+                else if (Char.IsLetter(c))
                 {
                     count++;
                 }
@@ -772,6 +772,384 @@ namespace ConCodeChallenge
 
         #region "EASY"
 
+        public static string BitwiseTwo(string[] strArr)
+        {
+            string result = string.Empty;
+            for (int i = 0; i < strArr[0].Length; i++)
+            {
+                result += (strArr[0][i] == '1' && strArr[1][i] == '1') ? '1' : '0';
+            }
+
+            return result;
+        }
+
+        public static int BinaryReversal(string str)
+        {
+            string result = string.Empty;
+            int num = int.Parse(str);
+
+            string binary = Convert.ToString(num, 2);
+
+            while(binary.Length % 8 > 0)
+            {
+                binary = "0" + binary;
+            }
+
+            char[] ch = binary.ToCharArray();
+            var reversed = ch.Reverse();
+
+            result = string.Join("", reversed);
+
+            return Convert.ToInt32(result, 2);
+        }
+
+        public static string BitwiseOne(string[] arr)
+        {
+            var result = string.Empty;
+
+            string[] arr1 = arr[0].Split(",");
+            string[] arr2 = arr[1].Split(",");
+            char[] ch1 = string.Join(string.Empty, arr1).ToCharArray();
+            char[] ch2 = string.Join(string.Empty, arr2).ToCharArray();
+
+            for (int i = 0; i < ch1.Length; i++)
+            {
+                if (ch1[i] == '1' || ch2[i] == '1')
+                    result += "1";
+                else
+                    result += "0";
+            }
+
+            return result;
+        }
+        public static string BitwiseOne1(string[] strArr)
+        {
+            var result = new StringBuilder();
+            for (int i = 0; i < strArr[0].Length; i++)
+            {
+                if (strArr[0][i] == '0' && strArr[1][i] == '0')
+                {
+                    result.Append("0");
+                }
+                else
+                {
+                    result.Append("1");
+                }
+            }
+
+            return result.ToString();
+        }
+        public static string BitwiseOneAnsw(string[] strArr)
+        {
+            string result = string.Empty;
+            for (int i = 0; i < strArr[0].Length; i++)
+            {
+                result += (strArr[0][i] == '1' || strArr[1][i] == '1') ? '1' : '0';
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Not passed
+        /// For input "vhhgghhgghhk" the output was incorrect. The correct output is vk
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string PalindromeCreator(string str)
+        {
+            string result = string.Empty;
+            str = "mmop";
+
+            char[] ch = str.ToCharArray();
+            var lst = ch.Select(c => c.ToString()).ToList();
+            var temp = ch.Select(c => c.ToString()).ToList();
+
+            if (CheckPalindrome(temp) && temp.Count > 2)
+                return "palindrome";
+
+            for(int i = 0; i < 2; i++)
+            {
+                if (i == 0)
+                    for (int j = 0; j <  lst.Count; j++)
+                    {
+                        temp = ch.Select(c => c.ToString()).ToList(); ;
+
+                        temp.RemoveAt(j);
+                        result = lst[j];
+
+                        if (CheckPalindrome(temp) && temp.Count > 2)
+                            return result;
+                    }
+                else 
+                {
+                    for (int j = 0; j < lst.Count - 1; j++)
+                    {
+                        temp = ch.Select(c => c.ToString()).ToList(); ;
+
+                        temp.RemoveAt(j);
+                        temp.RemoveAt(j);
+
+                        result = lst[j] + lst[j +1];
+
+                        if (CheckPalindrome(temp) && temp.Count > 2)
+                            return result;
+                    }
+                }
+            }
+
+            return "not possible";
+        }
+        private static bool CheckPalindrome(List<string> str)
+        {
+            var count = 0; 
+
+            for(int i = 0; i < str.Count; i++)
+            {
+                if ((str.Where<string>(a => (a == str[i])).Count() % 2) != 0)
+                {
+                    count += 1;
+                }
+                else
+                {
+                    if(str[i] != str[str.Count - 1 - i])
+                        return false;
+                }
+
+                if (count > 1)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static string NextPalindrome(int num)
+        {
+            var output = (num + 1).ToString();
+
+            do
+            {
+                char[] charArray = output.ToString().ToCharArray();
+                Array.Reverse(charArray);
+                var reverse = new string(charArray);
+                if (output == reverse)
+                    return output;
+                else
+                    output = (int.Parse(output.ToString()) + 1).ToString();
+            }
+            while (num.ToString() != output.ToString());
+
+            return output;
+        }
+
+        public static string OtherProducts(int[] arr)
+        {
+            arr = new int[] { 1, 4, 3 };
+
+            string result = string.Empty;
+            List<int> list = arr.ToList<int>();
+
+            for(int i = 0; i < list.Count; i++)
+            {
+                var lst = list.Where((v, x) => x != i).ToList();
+                var product = 1;
+
+                foreach(var j in lst)
+                {
+                    product *= j;
+                }
+
+                result += product.ToString() + "-";
+            }
+
+            return result.Remove(result.Length - 1, 1);
+        }
+        public static string OtherProductsAnsw(int[] arr)
+        {
+            string result = string.Empty;
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                var lst = arr.Where((v, x) => x != i).ToList();
+                var product = 1;
+
+                foreach (var j in lst)
+                {
+                    product *= j;
+                }
+
+                result += product.ToString() + "-";
+            }
+
+            return result.Remove(result.Length - 1, 1);
+        }
+
+        public static bool WaveSorting(int[] arr)
+        {
+            //a1 > a2 < a3 > a4 < a5 >
+            //Array.Sort(arr);
+            List<int> list = arr.ToList<int>();
+
+            //var ascendingOrder = list.OrderBy(i => i).ToList();
+            //var descendingOrder = list.OrderByDescending(i => i).ToList();
+            list.Sort((a, b) => a.CompareTo(b)); // ascending sort
+            //list.Sort((a, b) => b.CompareTo(a)); // descending sort
+
+            var indexH = arr.Length - 1;
+            var indexM = (arr.Length - 1) / 2;
+            for (int i = 0; i <= indexM; i++)
+            {
+                if (list[indexH - i] <= list[indexM - i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        public static string WaveSortingAnsw(int[] arr)
+        {
+            Array.Sort(arr);
+            var highIndex = arr.Length - 1;
+            var midIndex = (arr.Length - 1) / 2;
+            for (int i = 0; i <= midIndex; i++)
+            {
+                if (arr[highIndex - i] <= arr[midIndex - i])
+                {
+                    return "false";
+                }
+            }
+            if (arr.Length % 2 == 1)
+            {
+                if (arr[midIndex + 1] <= arr[0])
+                {
+                    return "false";
+                }
+            }
+
+            return "true";
+        }
+
+        public static string ScaleBalancing(string[] strArr)
+        {
+            strArr[0] = strArr[0].Replace("[", "").Replace("]", "");
+            strArr[1] = strArr[1].Replace("[", "").Replace("]", "");
+
+            string[] arrStr1 = strArr[0].ToString().Split(",");
+            string[] arrStr2 = strArr[1].ToString().Split(",");
+
+            int[] balance = Array.ConvertAll(arrStr1, s => int.Parse(s));
+            int[] weight = Array.ConvertAll(arrStr2, s => int.Parse(s));
+
+            List<int> list = weight.ToList<int>();
+
+            list.Add(0);
+            list.Sort();
+
+            var combinations = (from item1 in list
+                                from item2 in list
+                                select Tuple.Create(item1, item2)).Distinct().ToList();
+
+            foreach (var comb in combinations)
+            {
+                if (comb.Item1 != comb.Item2)
+                {
+                    if ((balance[0] + comb.Item1) - (balance[1] + comb.Item2) == 0 ||
+                        (balance[0] + comb.Item2) - (balance[1] + comb.Item1) == 0 ||
+                        (balance[1] + comb.Item1) - (balance[0] + comb.Item2) == 0 ||
+                        (balance[1] + comb.Item2) - (balance[0] + comb.Item1) == 0 ||
+                        (balance[0] + comb.Item1 + comb.Item2) - (balance[1]) == 0 ||
+                        (balance[0]) - (balance[1] + comb.Item1 + comb.Item2) == 0)
+                    {
+                        if (comb.Item1 == 0)
+                        {
+                            return comb.Item2.ToString();
+                        }
+                        else if (comb.Item2 == 0)
+                        {
+                            return comb.Item1.ToString();
+                        }
+                        else if (comb.Item1 < comb.Item2)
+                            return comb.Item1 + "," + comb.Item2;
+                        else
+                            return comb.Item2 + "," + comb.Item1;
+                    }
+                }
+            }
+
+            return "not possible";
+        }
+        public static string ScaleBalancing1(string[] strArr)
+        {
+            //{"[3, 4]", "[1, 2, 7, 7]"}
+            //{"[13, 4]", "[1, 2, 3, 6, 14]"}
+            //"{[5, 9]", "[1, 2, 6, 7]"}
+
+            strArr = new string[] { "[5, 9]", "[1, 2, 6, 7]" };
+
+            strArr[0] = strArr[0].Replace("[", "").Replace("]", "");
+            strArr[1] = strArr[1].Replace("[", "").Replace("]", "");
+
+            string[] arrStr1 = strArr[0].ToString().Split(",");
+            string[] arrStr2 = strArr[1].ToString().Split(",");
+
+            int[] balance = Array.ConvertAll(arrStr1, s => int.Parse(s));
+            int[] weight = Array.ConvertAll(arrStr2, s => int.Parse(s));
+
+            //weight = weight.Concat(new int[] { 0 }).ToArray();
+
+            //var newList = CreateSubsets<int>(weight.ToArray());
+            //var newlist = GetPowerSet(weight.ToList());
+
+            List<int> list = weight.ToList<int>();
+
+            list.Add(0);
+            list.Sort();
+
+           var combinations = (from item1 in list
+                              from item2 in list
+                              select Tuple.Create(item1, item2)).Distinct().ToList();
+
+            //var lst = combinations.Distinct().ToList();
+
+            foreach(var comb in combinations)
+            {
+                //string s = (balance[0] + comb.Item1).ToString() + " - " + (balance[1] + comb.Item2).ToString();
+
+                //return s;
+
+                if (comb.Item1 != comb.Item2)
+                {
+                    if ((balance[0] + comb.Item1) - (balance[1] + comb.Item2) == 0 ||
+                        (balance[0] + comb.Item2) - (balance[1] + comb.Item1) == 0 ||
+                        (balance[1] + comb.Item1) - (balance[0] + comb.Item2) == 0 ||
+                        (balance[1] + comb.Item2) - (balance[0] + comb.Item1) == 0 ||
+                        (balance[0] + comb.Item1 + comb.Item2) - (balance[1]) == 0 ||
+                        (balance[0]) - (balance[1] + comb.Item1 + comb.Item2) == 0)
+                    {
+                        if (comb.Item1 == 0)
+                        {
+                            return comb.Item2.ToString();
+                        }    
+                        else if (comb.Item2 == 0)
+                        {
+                            return comb.Item1.ToString();
+                        }
+                        else if(comb.Item1 < comb.Item2)
+                            return comb.Item1 + "," + comb.Item2;
+                        else
+                            return comb.Item2 + "," + comb.Item1;
+                    }
+                    //else if( (balance[0] + comb.Item1) - (balance[1]) == 0 ||
+                    //         (balance[0]) - (balance[1] + comb.Item1) == 0)
+                    //{
+                    //    return comb.Item1.ToString();
+                    //}
+                }
+            }
+
+            return "not possible";
+        }
 
         public static string TimeDifference(string[] strArr)
         {
@@ -2862,6 +3240,24 @@ namespace ConCodeChallenge
         }
         public static string LetterChanges1(string str)
         {
+            char[] charArray = str.ToCharArray();
+
+            for (var i = 0; i < charArray.Length; i++)
+            {
+                if (charArray[i] >= 'a' && charArray[i] <= 'z')
+                    charArray[i]++;
+
+                if (charArray[i] > 'z')
+                    charArray[i] = 'a';
+
+                if ("aeiou".IndexOf(charArray[i]) >= 0)
+                    charArray[i] = char.ToUpper(charArray[i]);
+
+            }
+            return new string(charArray);
+        }
+        public static string LetterChangesAnsw(string str)
+        {
             char c;
             string result = string.Empty;
 
@@ -2888,24 +3284,6 @@ namespace ConCodeChallenge
             }
 
             return result;
-        }
-        public static string LetterChangesAnsw(string str)
-        {
-            char[] charArray = str.ToCharArray();
-
-            for (var i = 0; i < charArray.Length; i++)
-            {
-                if (charArray[i] >= 'a' && charArray[i] <= 'z')
-                    charArray[i]++;
-
-                if (charArray[i] > 'z')
-                    charArray[i] = 'a';
-
-                if ("aeiou".IndexOf(charArray[i]) >= 0)
-                    charArray[i] = char.ToUpper(charArray[i]);
-
-            }
-            return new string(charArray);
         }
 
         public static Boolean Palindrome(string s)
@@ -2952,7 +3330,6 @@ namespace ConCodeChallenge
             //return new String(str.ToLower().Replace(" ", "").Reverse().ToArray()) == str.ToLower().Replace(" ", "").ToString().ToLower();
             return new String(str.ToLower().Replace(" ", "").Reverse().ToArray()) == str.ToLower().Replace(" ", "").ToLower();
         }
-
 
         public static string AlphabetSoup(string s)
         {
@@ -3021,9 +3398,7 @@ namespace ConCodeChallenge
                 total *= i;
             }
 
-            num = total;
-
-            return num;
+            return total;
         }
         public static int FirstFactorialAnsw(int num)
         {
@@ -3156,14 +3531,38 @@ namespace ConCodeChallenge
             CultureInfo.CurrentUICulture = new CultureInfo("en-EN", false);
 
 
-            //string[] arr = new string[] { "1:10pm", "4:40am", "5:00pm" };
-            //string[] arr = new string[] { "2:10pm", "1:30pm", "10:30am", "4:42pm" };
-            string str = "1:23am-1:08am";
+            string[] arr = new string[] { "100", "000" };
+            Console.WriteLine(BitwiseTwo(arr));
+
+
+            //string str = "47";
+            //Console.WriteLine(BinaryReversal(str));
+
+            //string[] arr = new string[] { "100", "000" };
+            //Console.WriteLine(BitwiseOne(arr));
+            //Console.WriteLine(BitwiseOneAnsw(arr));
+
+            //var str = "kjjjhjjj";
+            //Console.WriteLine(PalindromeCreator(str));
+
+            //var num = 180;
+            //Console.WriteLine(NextPalindrome(num));
+
+            //int[] arr = new int[] { 0, 4, 22, 4, 14, 4, 2 };
+            //Console.WriteLine(OtherProducts(arr));
+
+            //int[] arr = new int[] { 4, 2, 1, 1, 1, 1, 0 };
+            //int[] arr = new int[] { 0, 1, 2, 4, 1, 1, 1 };
+            //int[] arr = new int[] { 0, 4, 22, 4, 14, 4, 2 };
+            //Console.WriteLine(WaveSorting(arr));
+            //Console.WriteLine(WaveSortingAnsw(arr));
+
+            //string[] arr = new string[] { "[3, 4]", "[1, 2, 7, 7]" };
+            //Console.WriteLine(ScaleBalancing((arr)));
+
+            //string str = "1:23am-1:08am";
             //string str = "12:30pm-12:00am";
-            Console.WriteLine(CountingMinutes((str)));
-
-
-
+            //Console.WriteLine(CountingMinutes((str)));
 
             //string[] arr = new string[] { "1:10pm", "4:40am", "5:00pm" };
             //string[] arr = new string[] { "2:10pm", "1:30pm", "10:30am", "4:42pm" };
